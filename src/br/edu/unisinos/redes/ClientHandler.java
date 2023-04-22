@@ -32,12 +32,43 @@ public class ClientHandler implements Runnable {
                 messageFromClient = bufferedReader.readLine();
                 if (messageFromClient.equalsIgnoreCase(this.clientUserName + ": " + "all")) {
                     onlineUsers(clientHandlers.toString());
+                } else if (messageFromClient.contains("@")) {//
+                    broadcastMsgToUser(messageFromClient);
                 } else {
                     broadcastMessage(messageFromClient);
                 }
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
+            }
+        }
+    }
+
+    // Se for digitado @+username em qualquer local da mensagem
+    //Será realizado o envio para o username associado
+    private void broadcastMsgToUser(String messageToSend) {
+        boolean userNotFound = true;
+        for (ClientHandler clientHandler : clientHandlers) {
+            try {
+
+                if (messageToSend.contains("@" + clientHandler.clientUserName)) {
+                    clientHandler.bufferedWriter.write(messageToSend);
+                    clientHandler.bufferedWriter.newLine();
+                    clientHandler.bufferedWriter.flush();
+                    userNotFound = false;
+                }
+
+            } catch (IOException e) {
+                closeEverything(socket, bufferedReader, bufferedWriter);
+            }
+        }
+        if (userNotFound == true) {
+            try {
+                this.bufferedWriter.write("Usuário não encontrado! Digite all para ver usuários online");
+                this.bufferedWriter.newLine();
+                this.bufferedWriter.flush();
+            } catch (IOException e) {
+                closeEverything(socket, bufferedReader, bufferedWriter);
             }
         }
     }
