@@ -30,7 +30,11 @@ public class ClientHandler implements Runnable {
         while (socket.isConnected()) {
             try {
                 messageFromClient = bufferedReader.readLine();
-                broadcastMessage(messageFromClient);
+                if (messageFromClient.equalsIgnoreCase(this.clientUserName + ": " + "all")) {
+                    onlineUsers(clientHandlers.toString());
+                } else {
+                    broadcastMessage(messageFromClient);
+                }
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
@@ -49,6 +53,16 @@ public class ClientHandler implements Runnable {
             } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
             }
+        }
+    }
+
+    public void onlineUsers(String messageToSend) {
+        try {
+            this.bufferedWriter.write(messageToSend);
+            this.bufferedWriter.newLine();
+            this.bufferedWriter.flush();
+        } catch (IOException e) {
+            closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
 
@@ -78,4 +92,9 @@ public class ClientHandler implements Runnable {
         return clientUserName;
     }
 
+    @Override
+    public String toString() {
+        return clientUserName;
+    }
 }
+

@@ -40,6 +40,5 @@ public class Server {
         Server server = new Server(serverSocket);
         System.out.println("SERVER Online");
         server.startServer();
-
     }
 }
