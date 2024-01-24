@@ -1,4 +1,5 @@
 ChatMultiUser Java Project
+
 Overview
 This Java project implements a simple Multi-User Chat application with a client-server architecture. The application comprises three main classes: Client, ClientHandler, and Server. The project allows multiple clients to connect to a central server and engage in real-time chat communication.
 
